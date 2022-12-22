@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 // import ReactMarkdown from 'react-markdown';
-import { useUserInfoContext } from '../components/userInfo.jsx';
+import { useUserInfoContext } from "../components/userInfo.jsx";
 
 const MyBalloon = ({ children }) => {
   return (
@@ -30,7 +30,9 @@ const OtherBalloon = (props) => {
     <div className="other-chat-message">
       <div className="flex items-end">
         <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-        <span class="text-xs text-gray-300 inline-block leading-none">{props.name}</span>
+          <span className="text-xs text-gray-300 inline-block leading-none">
+            {props.name}
+          </span>
           <div>
             <span className="px-4 py-2 rounded-lg inline-block bg-gray-300 text-gray-600">
               {props.children}
@@ -51,68 +53,69 @@ const Chat = (props) => {
   const [messages, setMessage] = useState([]);
   const inputRef = useRef();
   const { userInfo } = useUserInfoContext();
-  const isFetching = useRef(false)
+  const isFetching = useRef(false);
+  const DBURL =
+    "https://script.google.com/macros/s/AKfycbyIVW3va5PXG9i6RG8CJAsetr1pJGqbnLnjOdFFV76VZfjQQ5VT6aYpFVuVi9Bhb_mNzg/exec";
+
+  // const userType = useRef("bot")
+  const groupType = useRef("test");
+  const organization = "Uc98b80a7f52c3cdea51b4783e22ab40b";
 
   useEffect(() => {
-    console.log('reRendered');
+    console.log("reRendered");
   });
 
   const getChat = () => {
     if (!isFetching.current) {
       isFetching.current = true;
-      fetch(
-        'https://script.googleusercontent.com/a/macros/f-sapporo.ed.jp/echo?user_content_key=BH8Kv2-HKQYYjlY7IqN45V38lEL1SzoVswu9259GzCNqdZheAUGElDH3UAFpbK1dMbrZjzC6hxqRxGzjnLYTBDnLNLb8gvf3OJmA1Yb3SEsKFZqtv3DaNYcMrmhZHmUMi80zadyHLKD69xnUh-IhrsfB63eL3TaQ1djiqESLJYkXNcZoe1zwbJVFMimvbwDGwkl1xMkIUh9GcDqYzi69rNwOzl2svdDzwiMeXCzRPHnYlXVu6ZSvRTMBkFmQ3nSn6aEFGJJrzo5cy6pr-Oj0FQ&lib=McovRLwPv54_SYyI5iluMo5-ZE1Y-KuHf'
-      )
+      fetch(`${DBURL}?route=api/get/${organization}`)
         .then((response) => response.json())
         .then((json) => {
           json = JSON.parse(JSON.stringify(json));
           console.log(json);
+          console.log(messages);
           setMessage(
-            messages == json.datas.data
-              ? console.log('there are not post')
-              : json['datas']['data'].map((elm, i) => {
-                const isMine = userInfo.current.userID == elm[2];
-                return isMine ? (
-                  <MyBalloon key={elm[0]} children={elm[5]} />
-                ) : (
-                  <OtherBalloon key={elm[0]} name={elm[3]} children={elm[5]} />
-                );
-              })
+            json.map((e, i) => {
+              // const isMine = userInfo.current.userID == ;
+              const isMine = e.userID == "BOT";
+              return isMine ? (
+                <MyBalloon
+                  key={`MyBaloon: ${i}`}
+                  children={e.messageType == "text" ? e.userMessage : "sticker"}
+                />
+              ) : (
+                <OtherBalloon
+                  key={`OtherBalloon: ${i}`}
+                  name={e.userName}
+                  children={e.messageType == "text" ? e.userMessage : "sticker"}
+                />
+              );
+            })
           );
           isFetching.current = false;
-        })
-    };
+        });
+    }
   };
 
   useEffect(() => {
     const poling = setInterval(() => getChat(), 3000); // props.interval : useRef()
-    return () => clearInterval(poling)
+    return () => clearInterval(poling);
   }, []);
 
   const handleClick = () => {
     console.log(`Message: ${inputRef.current.value}`);
     setMessage([...messages, <MyBalloon children={inputRef.current.value} />]);
     isFetching.current = true;
+    console.log(
+      `url: ${DBURL}?route=api/post/${groupType.current}/${organization}/${userInfo.current.displayName}/text/${inputRef.current.value}`
+    );
     fetch(
-      `https://script.google.com/macros/s/AKfycbyGRApn5hMMSRMsCX3rmuQHv9EQ8QTZE9Sh7uFnuCXxhcGqgEA5v2ChsjDzqFeNXCtMKQ/exec?type=post&body=${inputRef.current.value}&displayName=${userInfo.current.displayName}&userID=${userInfo.current.userID}&bodyType=text`
+      `${DBURL}?route=api/post/${groupType.current}/${organization}/${userInfo.current.displayName}/text/${inputRef.current.value}`
     )
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("Post to Set")
-        setMessage(
-          json['datas']['data'].map((elm) => {
-            const isMine = userInfo.current.userID == elm[2];
-            return isMine ? (
-              <MyBalloon key={elm[0]} name={elm[3]} children={elm[5]} />
-            ) : (
-              <OtherBalloon key={elm[0]} name={elm[3]} children={elm[5]} />
-            );
-          })
-        );
-        isFetching.current = false;
-      });
+      .then(() => console.log("posted"))
+      .catch((e) => console.log("an error occured\n" + e));
 
-    inputRef.current.value = '';
+    inputRef.current.value = "";
   };
 
   return (
@@ -133,69 +136,12 @@ const Chat = (props) => {
           </div> */}
           <div className="flex flex-col leading-tight mx-2">
             <div className="text-2xl mt-1 flex items-center">
-              <span className="text-gray-200 mr-3">Alpha Server</span>
+              <span className="text-gray-200 mr-3">用</span>
             </div>
-            <span className="text-lg text-gray-400">Chat data may be lost or suddenly unavailable due to maintenance</span>
+            {/* <span className="text-lg text-gray-400">
+              Chat data may be lost or suddenly unavailable due to maintenance
+            </span> */}
           </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              ></path>
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-lg border h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              ></path>
-            </svg>
-          </button>
         </div>
       </div>
       <div
