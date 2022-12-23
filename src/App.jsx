@@ -15,12 +15,16 @@ function App() {
   return (
     <div className="App">
       <div
-        className={`signin ${userInfo.current.isLogin ? "hidden" : "visible"}`}
+        className={`signin ${
+          userInfo.current.isLogin ? "hidden" : "visible w-screen h-screen"
+        }`}
       >
         <SignIn />
       </div>
       <div
-        className={`chat ${userInfo.current.isLogin ? "visible" : "hidden"}`}
+        className={`chat ${
+          userInfo.current.isLogin ? "visible w-screen h-screen" : "hidden"
+        }`}
       >
         <Chat />
       </div>
