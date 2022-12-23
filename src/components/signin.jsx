@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
-import { useUserInfoContext } from './userInfo';
-import { useLocalStorage } from './localStorage.jsx';
+import { useState, useRef } from "react";
+import { useUserInfoContext } from "./userInfo";
+import { useLocalStorage } from "./localStorage.jsx";
 
 const SignIn = () => {
   const { userInfo, setUserInfo } = useUserInfoContext();
@@ -22,7 +22,7 @@ const SignIn = () => {
     userInfo.current = tempUserInfo.current;
     setUserInfo(JSON.stringify(userInfo.current));
     console.log(`Submitted: ${current}`);
-    location.href = "./"
+    location.href = "./";
   };
 
   return (
@@ -32,11 +32,11 @@ const SignIn = () => {
           <h1 className="mb-8 text-3xl text-center">What's your name?</h1>
           <input
             type="text"
-            className="block border border-grey-light w-full p-3 rounded mb-4"
+            className="block border border-grey-300 w-full p-3 rounded mb-4 bg-white"
             name="displayname"
             onChange={(e) => {
-              handleUserInfo('displayName', e.target.value);
-              handleUserInfo('isLogin', true);
+              handleUserInfo("displayName", e.target.value);
+              handleUserInfo("isLogin", true);
             }}
             placeholder="Diplay Name"
           />
@@ -56,8 +56,8 @@ const SignIn = () => {
               href="#"
             >
               Terms of Service
-            </a>{' '}
-            and
+            </a>{" "}
+            and{" "}
             <a
               className="no-underline border-b border-grey-dark text-grey-dark"
               href="#"
@@ -67,7 +67,7 @@ const SignIn = () => {
           </div>
         </div>
 
-        <div className="text-grey-dark mt-6">
+        {/* <div className="text-grey-dark mt-6">
           Already have an account?
           <a
             className="no-underline border-b border-blue text-blue"
@@ -76,7 +76,7 @@ const SignIn = () => {
             Log in
           </a>
           .
-        </div>
+        </div> */}
       </div>
     </div>
   );
