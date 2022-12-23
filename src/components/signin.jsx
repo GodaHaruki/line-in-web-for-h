@@ -22,7 +22,7 @@ const SignIn = () => {
     userInfo.current = tempUserInfo.current;
     setUserInfo(JSON.stringify(userInfo.current));
     console.log(`Submitted: ${current}`);
-    location.href = "../"
+    location.href = "./"
   };
 
   return (
