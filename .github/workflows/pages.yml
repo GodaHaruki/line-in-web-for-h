@@ -36,7 +36,7 @@ jobs:
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
-      - run: npm ci
+      - run: npm i
       - run: npm run build
 
   # Deployment job
