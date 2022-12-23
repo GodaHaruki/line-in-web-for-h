@@ -59,7 +59,7 @@ const Chat = (props) => {
 
   // const userType = useRef("bot")
   const groupType = useRef("test");
-  const organization = "C2142f9bef0db3567f02ab80cf6bca262";
+  const organization = "C9a82c3e173fb1c39a151c2a095443e39";
 
   useEffect(() => {
     console.log("reRendered");
