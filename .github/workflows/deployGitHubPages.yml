@@ -26,8 +26,8 @@ jobs:
           node-version: 18
           # yarnのキャッシュを効かすために設定 (npmのかたはnpmで)
           cache: npm
-      - name: npm ci
-        run: npm ci
+      - name: npm i
+        run: npm i
       - name: npm run build
         run: npm run build
         # GIthubページは https://USERNAME.github.io/REPOSITORY_NAME/
