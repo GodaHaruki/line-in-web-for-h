@@ -32,7 +32,7 @@ const SignIn = () => {
           <h1 className="mb-8 text-3xl text-center">What's your name?</h1>
           <input
             type="text"
-            className="block border border-grey-light w-full p-3 rounded mb-4 bg-white"
+            className="block text-black border border-grey-light w-full p-3 rounded mb-4 bg-white"
             name="displayname"
             onChange={(e) => {
               handleUserInfo("displayName", e.target.value);
