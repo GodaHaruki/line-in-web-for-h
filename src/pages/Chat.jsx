@@ -136,7 +136,7 @@ const Chat = (props) => {
           </div> */}
           <div className="flex flex-col leading-tight mx-2">
             <div className="text-2xl mt-1 flex items-center">
-              <span className="text-gray-200 mr-3">あゆむ用</span>
+              <span className="text-gray-200 mr-3">肥田野さん用</span>
             </div>
             {/* <span className="text-lg text-gray-400">
               Chat data may be lost or suddenly unavailable due to maintenance
